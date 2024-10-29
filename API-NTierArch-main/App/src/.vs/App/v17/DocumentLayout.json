@@ -1,0 +1,126 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\ilkin\\OneDrive\\Desktop\\API-NTierArch\\App\\src\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{EF2F1779-80CD-492A-B5F8-9CAE159BEDE5}|App.Shared\\App.Shared.csproj|c:\\users\\ilkin\\onedrive\\desktop\\api-ntierarch\\app\\src\\app.shared\\implementations\\claimservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EF2F1779-80CD-492A-B5F8-9CAE159BEDE5}|App.Shared\\App.Shared.csproj|solutionrelative:app.shared\\implementations\\claimservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{36A9E6DB-A0CC-46A3-9E58-0DF1369591C7}|App.DAL\\App.DAL.csproj|c:\\users\\ilkin\\onedrive\\desktop\\api-ntierarch\\app\\src\\app.dal\\presistence\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{36A9E6DB-A0CC-46A3-9E58-0DF1369591C7}|App.DAL\\App.DAL.csproj|solutionrelative:app.dal\\presistence\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{36A9E6DB-A0CC-46A3-9E58-0DF1369591C7}|App.DAL\\App.DAL.csproj|c:\\users\\ilkin\\onedrive\\desktop\\api-ntierarch\\app\\src\\app.dal\\daldependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{36A9E6DB-A0CC-46A3-9E58-0DF1369591C7}|App.DAL\\App.DAL.csproj|solutionrelative:app.dal\\daldependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{36A9E6DB-A0CC-46A3-9E58-0DF1369591C7}|App.DAL\\App.DAL.csproj|c:\\users\\ilkin\\onedrive\\desktop\\api-ntierarch\\app\\src\\app.dal\\repositories\\implementations\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{36A9E6DB-A0CC-46A3-9E58-0DF1369591C7}|App.DAL\\App.DAL.csproj|solutionrelative:app.dal\\repositories\\implementations\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{67A6B18E-D112-4E2C-A6D1-87951A3A4B87}|App.Core\\App.Core.csproj|c:\\users\\ilkin\\onedrive\\desktop\\api-ntierarch\\app\\src\\app.core\\enums\\euserrole.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{67A6B18E-D112-4E2C-A6D1-87951A3A4B87}|App.Core\\App.Core.csproj|solutionrelative:app.core\\enums\\euserrole.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{67A6B18E-D112-4E2C-A6D1-87951A3A4B87}|App.Core\\App.Core.csproj|c:\\users\\ilkin\\onedrive\\desktop\\api-ntierarch\\app\\src\\app.core\\entities\\identity\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{67A6B18E-D112-4E2C-A6D1-87951A3A4B87}|App.Core\\App.Core.csproj|solutionrelative:app.core\\entities\\identity\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ClaimService.cs",
+              "DocumentMoniker": "C:\\Users\\ilkin\\OneDrive\\Desktop\\API-NTierArch\\App\\src\\App.Shared\\Implementations\\ClaimService.cs",
+              "RelativeDocumentMoniker": "App.Shared\\Implementations\\ClaimService.cs",
+              "ToolTip": "C:\\Users\\ilkin\\OneDrive\\Desktop\\API-NTierArch\\App\\src\\App.Shared\\Implementations\\ClaimService.cs",
+              "RelativeToolTip": "App.Shared\\Implementations\\ClaimService.cs",
+              "ViewState": "AQIAAAsAAAAAAAAAAAAxwBQAAAAfAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-24T16:48:02.663Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DALDependencyInjection.cs",
+              "DocumentMoniker": "C:\\Users\\ilkin\\OneDrive\\Desktop\\API-NTierArch\\App\\src\\App.DAL\\DALDependencyInjection.cs",
+              "RelativeDocumentMoniker": "App.DAL\\DALDependencyInjection.cs",
+              "ToolTip": "C:\\Users\\ilkin\\OneDrive\\Desktop\\API-NTierArch\\App\\src\\App.DAL\\DALDependencyInjection.cs",
+              "RelativeToolTip": "App.DAL\\DALDependencyInjection.cs",
+              "ViewState": "AQIAAB4AAAAAAAAAAAAYwDwAAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-24T16:47:37.727Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Repository.cs",
+              "DocumentMoniker": "C:\\Users\\ilkin\\OneDrive\\Desktop\\API-NTierArch\\App\\src\\App.DAL\\Repositories\\Implementations\\Repository.cs",
+              "RelativeDocumentMoniker": "App.DAL\\Repositories\\Implementations\\Repository.cs",
+              "ToolTip": "C:\\Users\\ilkin\\OneDrive\\Desktop\\API-NTierArch\\App\\src\\App.DAL\\Repositories\\Implementations\\Repository.cs",
+              "RelativeToolTip": "App.DAL\\Repositories\\Implementations\\Repository.cs",
+              "ViewState": "AQIAAEMAAAAAAAAAAADwv1AAAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-24T16:46:24.304Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\ilkin\\OneDrive\\Desktop\\API-NTierArch\\App\\src\\App.DAL\\Presistence\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "App.DAL\\Presistence\\AppDbContext.cs",
+              "ToolTip": "C:\\Users\\ilkin\\OneDrive\\Desktop\\API-NTierArch\\App\\src\\App.DAL\\Presistence\\AppDbContext.cs",
+              "RelativeToolTip": "App.DAL\\Presistence\\AppDbContext.cs",
+              "ViewState": "AQIAABkAAAAAAAAAAAAQwCgAAABYAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-24T16:45:42.935Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "EUserRole.cs",
+              "DocumentMoniker": "C:\\Users\\ilkin\\OneDrive\\Desktop\\API-NTierArch\\App\\src\\App.Core\\Enums\\EUserRole.cs",
+              "RelativeDocumentMoniker": "App.Core\\Enums\\EUserRole.cs",
+              "ToolTip": "C:\\Users\\ilkin\\OneDrive\\Desktop\\API-NTierArch\\App\\src\\App.Core\\Enums\\EUserRole.cs",
+              "RelativeToolTip": "App.Core\\Enums\\EUserRole.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-24T16:44:55.686Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\ilkin\\OneDrive\\Desktop\\API-NTierArch\\App\\src\\App.Core\\Entities\\Identity\\User.cs",
+              "RelativeDocumentMoniker": "App.Core\\Entities\\Identity\\User.cs",
+              "ToolTip": "C:\\Users\\ilkin\\OneDrive\\Desktop\\API-NTierArch\\App\\src\\App.Core\\Entities\\Identity\\User.cs",
+              "RelativeToolTip": "App.Core\\Entities\\Identity\\User.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-24T16:44:32.432Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
