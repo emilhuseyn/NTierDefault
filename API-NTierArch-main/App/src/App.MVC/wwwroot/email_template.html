@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<html lang='az'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Məzun 2025 Dəvətnaməsi</title>
+    <style>
+        @font-face {
+            font-family: 'AzL Palatino Linotype';
+            src: local('Palatino Linotype'), local('PalatinoLinotype'), url('PalatinoLinotype.ttf') format('truetype');
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .invitation-container {
+            position: relative;
+            width: 700px;
+            height: 1000px;
+        }
+
+        .background {
+            width: 100%;
+            height: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .graduate-name {
+            position: absolute;
+            left: 62px;
+            top: 450px;
+            width: 100%;
+            text-align: left;
+            font-size: 22px;
+            color: #134865;
+            font-family: 'AzL Palatino Linotype', 'Times New Roman', serif;
+        }
+
+        .message {
+            position: absolute;
+            left: 62px;
+            top: 480px;
+            width: 100%;
+            text-align: left;
+            font-size: 18px;
+            color: #134865;
+            font-family: 'AzL Palatino Linotype', 'Times New Roman', serif;
+        }
+
+        .signature {
+            position: absolute;
+            left: 62px;
+            top: 550px;
+            width: 100%;
+            text-align: left;
+            font-size: 20px;
+            color: #134865;
+            font-family: 'AzL Palatino Linotype', 'Times New Roman', serif;
+        }
+
+        .note {
+            position: absolute;
+            left: 62px;
+            top: 600px;
+            width: 100%;
+            text-align: left;
+            font-size: 14px;
+            color: #134865;
+            font-family: 'AzL Palatino Linotype', 'Times New Roman', serif;
+        }
+
+        .qr-code {
+            position: absolute;
+            left: 49%;
+            transform: translateX(-50%);
+            bottom: 168px;
+            width: 140px;
+            height: 140px;
+            background: url('{qrCodeFilePath}') no-repeat center center;
+            background-size: contain;
+        }
+    </style>
+</head>
+<body>
+    <div class='invitation-container'>
+        <img src="~/template.png" class='background' alt='Dəvətnamə Fon'>
+
+        <div class='graduate-name'>{graduateName}</div>
+
+        <p class='message'>
+            Səni təbrik edirik və uğurlarının davamını diləyirik.<br>
+            Məzuniyyət günündə səni aramızda görməkdən şad olarıq!
+        </p>
+
+        <p class='signature'>Hörmətlə, Bakı Dövlət Universiteti</p>
+
+        <p class='note'>
+            Qeyd: QR Kodu məkana yaxınlaşdığınız zaman göstərməyi unutmayın.<br>
+            Məkan, tarix və saat öncədən bildiriləcəkdir.
+        </p>
+
+        <div class='qr-code'></div>
+    </div>
+</body>
+</html>

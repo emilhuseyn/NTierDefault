@@ -1,0 +1,206 @@
+﻿@model App.Business.DTOs.GraduateDTO
+
+@{
+    ViewData["Title"] = "Məzun Məlumatları";
+}
+
+<main class="main-container">
+    <div class="container">
+        <div class="card">
+            <h2>Məzun Məlumatları</h2>
+
+            <div class="detail-grid">
+                <!-- İçəridədir Toggle Switch -->
+                <div class="info-group">
+                    <label for="isInsideCheckbox">İçəridədir:</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="isInsideCheckbox" @(Model.IsInside ? "checked" : "") onchange="updateIsInside(@Model.Id)">
+                        <span class="slider"></span>
+                    </label>
+                    <span id="statusText">@((Model.IsInside) ? "Bəli" : "Xeyr")</span>
+                </div>
+
+                <div class="info-group"><label>Ad:</label><span>@Model.Name</span></div>
+                <div class="info-group"><label>Soyad:</label><span>@Model.Surname</span></div>
+                <div class="info-group"><label>Ata Adı:</label><span>@Model.FatherName</span></div>
+                <div class="info-group"><label>Email:</label><span>@Model.Email</span></div>
+                <div class="info-group"><label>Tip:</label><span>@Model.EducationLevel</span></div>
+                <div class="info-group"><label>Telefon nömrəsi:</label><span>@(string.IsNullOrEmpty(Model.Telephone) ? "Məlumat yoxdur" : Model.Telephone)</span></div>
+                <div class="info-group"><label>Fakültə:</label><span>@Model.Faculty</span></div>
+                <div class="info-group"><label>Qrup:</label><span>@Model.Group</span></div>
+                <div class="info-group"><label>Qeydiyyat Tarixi:</label><span>@Model.CreatedOn?.ToString("yyyy-MM-dd")</span></div>
+            </div>
+
+            <div class="image-container">
+                <div class="image-box"><p class="image-label">Üz şəkli</p><img src="@Model.PhotoUrl" alt="Profile Photo" class="profile-photo"></div>
+                <div class="image-box"><p class="image-label">Tələbə Kartı Şəkli</p><img src="@Model.IdUrl" alt="ID Photo" class="profile-photo"></div>
+            </div>
+
+            <div class="form-footer">
+                <a asp-action="Index" asp-controller="Home" class="back-button">🔙 Geri</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<style>
+    .main-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 700px;
+        width: 100%;
+    }
+
+    .card {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 15px;
+        text-align: left;
+        padding: 10px;
+    }
+
+    .info-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    /* Toggle Switch Design */
+    .toggle-switch {
+        position: relative;
+        width: 50px;
+        height: 25px;
+    }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.3s;
+        border-radius: 34px;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+    input:checked + .slider {
+        background-color: #3498db;
+    }
+
+        input:checked + .slider:before {
+            transform: translateX(25px);
+        }
+
+    .image-container {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-top: 20px;
+    }
+
+    .image-box {
+        text-align: center;
+    }
+
+    .image-label {
+        font-weight: bold;
+        margin-bottom: 8px;
+        font-size: 1.1em;
+        color: #2c3e50;
+    }
+
+    .profile-photo {
+        width: 246px;
+        height: 246px;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 3px solid #ccc;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .form-footer {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .back-button {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 18px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 1.1em;
+    }
+
+        .back-button:hover {
+            background: #2980b9;
+        }
+</style>
+
+<script>
+    function updateIsInside(graduateId) {
+        var checkbox = document.getElementById("isInsideCheckbox");
+        var isChecked = checkbox.checked;
+        var statusText = document.getElementById("statusText");
+
+        // Show loading effect
+        statusText.innerHTML = "Yüklənir...";
+
+        fetch(`/Home/UpdateIsInside`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: graduateId, isInside: isChecked })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                statusText.innerHTML = isChecked ? "Bəli" : "Xeyr";
+            } else {
+                alert("Xəta baş verdi, yenidən yoxlayın!");
+                checkbox.checked = !isChecked; // Revert toggle on failure
+            }
+        })
+        .catch(error => {
+            console.error("Error updating IsInside:", error);
+            alert("Bağlantı xətası! Yenidən yoxlayın.");
+            checkbox.checked = !isChecked;
+        });
+    }
+</script>

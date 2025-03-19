@@ -1,0 +1,73 @@
+﻿@using App.Business.DTOs
+@{
+    Layout = null;
+}
+@model LoginUserDTO
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication - Graduate Registry</title>
+    <link rel="stylesheet" href="auth.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="~/css/CreateUsercss.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card" id="loginCard">
+            <div class="auth-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="auth-logo">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                    <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                </svg>
+                <h1>Xoş Gəldiniz</h1>
+                <p>Hesabınıza daxil olun</p>
+            </div>
+
+            <form class="auth-form" asp-action="Login" asp-controller="Account" method="post" novalidate>
+                <div class="form-group">
+                    <label for="loginUsername">Username</label>
+                    <div class="input-with-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <input type="Username" id="loginUsername" name="Username" asp-for="Username" required placeholder="Usernameni daxil edin">
+                    </div>
+                    <span class="text-danger" asp-validation-for="Username"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="loginPassword">Şifrə</label>
+                    <div class="input-with-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        <input type="password" id="loginPassword" name="password" asp-for="Password" required placeholder="Şifrənizi daxil edin">
+                    </div>
+                    <span class="text-danger" asp-validation-for="Password"></span>@if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger">
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <p style="color:red">@error.ErrorMessage</p>
+                            }
+                        </div>
+                    }
+
+                </div>
+
+                <span class="text-danger" asp-validation-summary="All"></span>
+
+                <button type="submit" class="auth-button">Daxil ol</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

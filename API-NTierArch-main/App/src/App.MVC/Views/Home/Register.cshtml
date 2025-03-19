@@ -1,0 +1,227 @@
+﻿@model App.Business.DTOs.CreateGraduateDTO
+
+@{
+    ViewData["Title"] = "Məzun Qeydiyyatı";
+}
+ 
+ 
+
+
+<style>
+    .change-btn {
+        background-color: #2563eb;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+        margin-top: 10px;
+        display: none;
+        width: 100%;
+        text-align: center;
+    }
+
+        .change-btn:hover {
+            background-color: #1d4ed8;
+            transform: scale(1.05);
+        }
+
+        .change-btn:active {
+            transform: scale(0.98);
+        }
+
+    .image-preview img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin-top: 10px;
+    }
+
+    .image-drop-area {
+        border: 2px dashed #9ca3af;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color 0.3s ease;
+    }
+
+    .text-danger {
+        color: red !important; /* Ensures error messages are in red */
+        font-size: 14px; /* Adjust the size for better visibility */
+        font-weight: bold; /* Makes it more noticeable */
+        margin-top: 5px;
+        display: block;
+    }
+
+        .image-drop-area:hover {
+            border-color: #2563eb;
+        }
+
+    .upload-text {
+        font-size: 14px;
+        color: #6b7280;
+    }
+</style>
+
+<main class="main-container">
+    <div class="container">
+        <div class="card">
+            <form asp-action="Register" asp-controller="Home" method="post" enctype="multipart/form-data">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">Ad</label>
+                        <input asp-for="Name" class="form-control">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="surname">Soyad</label>
+                        <input asp-for="Surname" class="form-control">
+                        <span asp-validation-for="Surname" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="fatherName">Ata Adı</label>
+                        <input asp-for="FatherName" class="form-control">
+                        <span asp-validation-for="FatherName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input asp-for="Email" class="form-control">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="Telephone">Telefon nömrəsi</label>
+                        <input asp-for="Telephone" class="form-control">
+                        <span asp-validation-for="Telephone" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="faculty">Fakültə</label>
+                        <select asp-for="Faculty" class="form-control">
+                            <option value="">Seçin...</option>
+                            <option value="Tarix">Tarix</option>
+                            <option value="Mexanika-riyaziyyat">Mexanika-riyaziyyat</option>
+                            <option value="Tətbiqi riyaziyyat və kibernetika">Tətbiqi riyaziyyat və kibernetika</option>
+                            <option value="Fizika">Fizika</option>
+                            <option value="Kimya">Kimya</option>
+                            <option value="Coğrafiya">Coğrafiya</option>
+                            <option value="Biologiya">Biologiya</option>
+                            <option value="Geologiya">Geologiya</option>
+                            <option value="Ekologiya və torpaqşünaslıq">Ekologiya və torpaqşünaslıq</option>
+                            <option value="Filologiya">Filologiya</option>
+                            <option value="Hüquq">Hüquq</option>
+                            <option value="Beynəlxalq münasibətlər və iqtisadiyyat">Beynəlxalq münasibətlər və iqtisadiyyat</option>
+                            <option value="İnformasiya və sənəd menecmenti">İnformasiya və sənəd menecmenti</option>
+                            <option value="Jurnalistika">Jurnalistika</option>
+                            <option value="Şərqşünaslıq">Şərqşünaslıq</option>
+                            <option value="SEP">SEP</option>
+                            <option value="SABAH qrupları">SABAH qrupları</option>
+                            <option value="Əlavə təhsil">Əlavə təhsil</option>
+                        </select>
+                        <span asp-validation-for="Faculty" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="group">Qrup</label>
+                        <input asp-for="Group" class="form-control">
+                        <span asp-validation-for="Group" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="EducationLevel">Təhsil Səviyyəsi</label>
+                        <select asp-for="EducationLevel" class="form-control">
+                            <option value="">Seçin...</option>
+                            <option value="Bakalavriat">Bakalavriat</option>
+                            <option value="Magistr">Magistr</option>
+                            <option value="Müəllim">Müəllim</option>
+                            <option value="Qonaq">Qonaq</option>
+                        </select>
+                        <span asp-validation-for="EducationLevel" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <!-- Image Upload Section -->
+                <div class="image-upload-container">
+                    <!-- Profile Picture -->
+                    <div class="image-upload-box">
+                        <label>Üz şəkli</label>
+                        <div class="image-drop-area" onclick="triggerFileInput('photoInput')">
+                            <input asp-for="Photo" type="file" accept="image/*" id="photoInput" class="image-input"
+                                   onchange="previewImage(this, 'photoPreview', 'photoChangeBtn')">
+                            <input type="file" accept="image/*" id="photoCameraInput" capture="environment"
+                                   class="image-input" onchange="previewImage(this, 'photoPreview', 'photoChangeBtn')">
+                            <div class="image-preview" id="photoPreview">
+                                @if (ViewData["PhotoBase64"] != null)
+                                {
+                                        <img src="data:image/png;base64,@ViewData["PhotoBase64"]" alt="Uploaded Image">
+                                }
+                                else
+                                {
+                                        <span class="upload-text">Şəkil yüklə</span>
+                                }
+                            </div>
+                        </div>
+                        <button type="button" class="change-btn" id="photoChangeBtn" onclick="triggerFileInput('photoInput')"
+                                style="display: @(ViewData["PhotoBase64"] != null ? "block" : "none")">
+                            Dəyiş
+                        </button>
+                        <span asp-validation-for="Photo" class="text-danger"></span>
+                    </div>
+
+                    <!-- Student ID Picture -->
+                    <div class="image-upload-box">
+                        <label>Tələbə Kartı Şəkli</label>
+                        <div class="image-drop-area" onclick="triggerFileInput('idPhotoInput')">
+                            <input asp-for="ImageId" type="file" accept="image/*" id="idPhotoInput" class="image-input"
+                                   onchange="previewImage(this, 'idPhotoPreview', 'idPhotoChangeBtn')">
+                            <input type="file" accept="image/*" id="idPhotoCameraInput" capture="user"
+                                   class="image-input" onchange="previewImage(this, 'idPhotoPreview', 'idPhotoChangeBtn')">
+                            <div class="image-preview" id="idPhotoPreview">
+                                @if (ViewData["ImageIdBase64"] != null)
+                                {
+                                        <img src="data:image/png;base64,@ViewData["ImageIdBase64"]" alt="Uploaded Image">
+                                }
+                                else
+                                {
+                                        <span class="upload-text">Şəkil yüklə</span>
+                                }
+                            </div>
+                        </div>
+                        <button type="button" class="change-btn" id="idPhotoChangeBtn" onclick="triggerFileInput('idPhotoInput')"
+                                style="display: @(ViewData["ImageIdBase64"] != null ? "block" : "none")">
+                            Dəyiş
+                        </button>
+                        <span asp-validation-for="ImageId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div  class="form-footer">
+                    <button asp-action="Register" asp-controller="Home" type="submit" class="submit-button">Qeydiyyat</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function triggerFileInput(inputId) {
+            document.getElementById(inputId).click();
+        }
+
+        function previewImage(input, previewId, changeBtnId) {
+            let file = input.files[0];
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    let previewDiv = document.getElementById(previewId);
+                    let changeBtn = document.getElementById(changeBtnId);
+
+                    previewDiv.innerHTML = `<img src="${e.target.result}" alt="Uploaded Image">`;
+                    changeBtn.style.display = "block";
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</main>

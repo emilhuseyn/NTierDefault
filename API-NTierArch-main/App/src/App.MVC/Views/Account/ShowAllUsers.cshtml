@@ -1,0 +1,279 @@
+﻿@using App.Business.DTOs
+@model List<ShowUserDTO>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bütün İstifadəçilər</title>
+    <link rel="stylesheet" href="~/css/graduates.css">
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+        }
+
+            .search-box input {
+                width: 100%;
+                padding: 10px 15px;
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+                font-size: 16px;
+                transition: border-color 0.3s ease;
+            }
+
+                .search-box input:focus {
+                    border-color: #3498db;
+                    outline: none;
+                }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .table th, .table td {
+                padding: 12px;
+                text-align: left;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .table th {
+                background: #f8f9fa;
+                font-weight: 600;
+                color: #2c3e50;
+            }
+
+            .table tr:hover {
+                background: #f1f1f1;
+            }
+
+        /* Delete Button */
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            font-size: 14px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .delete-btn:hover {
+                background-color: #c0392b;
+                transform: scale(1.05);
+            }
+
+        /* Confirmation Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .confirm-btn, .cancel-btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .confirm-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+            .confirm-btn:hover {
+                background-color: #c0392b;
+            }
+
+        .cancel-btn {
+            background-color: #bdc3c7;
+            color: black;
+        }
+
+            .cancel-btn:hover {
+                background-color: #95a5a6;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Bütün İstifadəçilər</h2>
+        <div class="table-container">
+            <div class="table-actions">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Axtar..." onkeyup="filterUsers()">
+                    <span class="search-icon">🔍</span>
+                </div>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>İstifadəçi Adı</th>
+                        <th>Rolu</th>
+                        <th>Əməliyyat</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td>@user.Username</td>
+                            <td>@user.Role</td>
+                            <td>
+                                <button class="delete-btn" onclick="openDeleteModal('@user.Username')">🗑 Sil</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h3>İstifadəçini silmək istədiyinizə əminsiniz?</h3>
+            <p id="deleteUsername"></p>
+            <div class="modal-buttons">
+                <button class="confirm-btn" onclick="confirmDelete()">Bəli, sil</button>
+                <button class="cancel-btn" onclick="closeDeleteModal()">Xeyr, imtina</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let deleteUsername = '';
+
+        function filterUsers() {
+            var input = document.getElementById("searchInput").value.toLowerCase();
+            var rows = document.getElementById("usersTableBody").getElementsByTagName("tr");
+
+            for (var i = 0; i < rows.length; i++) {
+                var username = rows[i].getElementsByTagName("td")[0].innerText.toLowerCase();
+                var role = rows[i].getElementsByTagName("td")[1].innerText.toLowerCase();
+
+                if (username.includes(input) || role.includes(input)) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+
+                function openDeleteModal(username) {
+            if (!username) {
+                alert("İstifadəçi adı tapılmadı!");
+                return;
+            }
+
+            deleteUsername = username; // Burada username düzgün təyin olunur
+            document.getElementById("deleteUsername").innerText = username;
+            document.getElementById("deleteModal").style.display = "flex";
+        }
+
+
+        function closeDeleteModal() {
+            deleteUsername = '';
+            document.getElementById("deleteModal").style.display = "none";
+        }
+               function confirmDelete() {
+            if (!deleteUsername) {
+                alert("İstifadəçi adı boş ola bilməz.");
+                return;
+            }
+
+            fetch('/Account/DeleteUser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ username: deleteUsername }) // JSON olaraq göndəririk
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("İstifadəçi uğurla silindi.");
+                    location.reload();
+                } else {
+                    alert(data.message || "İstifadəçi silinə bilmədi. Server xətası.");
+                }
+            })
+            .catch(error => {
+                console.error("Silinmə zamanı xəta:", error);
+                alert("Xəta baş verdi, yenidən yoxlayın.");
+            });
+
+            closeDeleteModal();
+        }
+
+
+    </script>
+
+</body>
+</html>

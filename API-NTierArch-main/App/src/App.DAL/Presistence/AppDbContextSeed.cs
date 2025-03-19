@@ -26,8 +26,8 @@ namespace App.DAL.Presistence
 
             if (adminExists == null)
             {
-                var userAdmin = new User { UserName = "admin", Email = "admin@admin.com", EmailConfirmed = true };
-                await userManager.CreateAsync(userAdmin, "!Admin123.?Back3ndFr0nt3nd@");
+                var userAdmin = new User { UserName = "Emil", Email = "admin@admin.com", EmailConfirmed = true };
+                await userManager.CreateAsync(userAdmin, "Emil1234!");
                 await userManager.AddToRoleAsync(userAdmin, EUserRole.Admin.ToString());
             }
 

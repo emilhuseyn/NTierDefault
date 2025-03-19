@@ -1,0 +1,232 @@
+﻿/* Base Styles - Already Defined */
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+}
+
+/* Ensure body takes full width and scales properly */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--gray-100);
+    color: var(--gray-800);
+    line-height: 1.5;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* Responsive Container */
+.main-container {
+    max-width: 1280px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* Responsive Navigation */
+.nav-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    height: 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Navbar Adjustments */
+.nav-tabs {
+    display: flex;
+    gap: 1rem;
+}
+
+.nav-button {
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+}
+
+/* Responsive Form Grid */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Image Upload */
+.image-upload-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Responsive Image */
+.profile-photo {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    border-radius: 10px;
+}
+
+/* Adjust Button Sizes for Mobile */
+.submit-button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+}
+
+/* Graduate Cards */
+.graduates-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+/* Responsive Details Grid */
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+/* Adjust Image Sizes */
+.large-profile-photo {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+}
+
+/* ID Photo */
+.id-photo {
+    width: 100%;
+    max-width: 250px;
+    height: auto;
+}
+
+/* Responsive Design for Tablets and Mobile */
+@media (max-width: 1280px) {
+    .main-container {
+        padding: 0 1.5rem;
+    }
+
+    .nav-container {
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .graduates-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-photo,
+    .large-profile-photo,
+    .id-photo {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .graduates-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .nav-tabs {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .nav-button {
+        width: 100%;
+        text-align: center;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-photo,
+    .large-profile-photo,
+    .id-photo {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+        align-items: center;
+        height: auto;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .graduates-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-photo,
+    .large-profile-photo,
+    .id-photo {
+        max-width: 80%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .submit-button {
+        width: 100%;
+        padding: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-container {
+        padding: 0 1rem;
+    }
+
+    .nav-container {
+        padding: 0.5rem;
+    }
+
+    .graduates-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-photo,
+    .large-profile-photo,
+    .id-photo {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .submit-button {
+        font-size: 0.875rem;
+        padding: 0.5rem;
+    }
+}
+

@@ -1,5 +1,9 @@
 ﻿using App.Core.Entities.Identity;
 using App.DAL.Presistence;
+using App.DAL.Repositories.Implementations;
+using App.DAL.Repositories.Interfaces;
+using App.Shared.Implementations;
+using App.Shared.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -53,13 +57,24 @@ namespace App.DAL
 
                 options.User.AllowedUserNameCharacters =
                     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-                options.User.RequireUniqueEmail = true;
+              
             });
         }
 
         private static void AddRepositories(this IServiceCollection services)
         {
-            // Repositories adding here!!!
+            var internalServices = new Dictionary<Type, Type>
+            {
+                { typeof(IGraduateRepository), typeof(GraduateRepository) },
+               
+            };
+
+            foreach (var (interfaceType, implementationType) in internalServices)
+            {
+                services.AddScoped(interfaceType, implementationType);
+            }
+            // External Services 
+            //services.AddScoped<IFileManagerService, FileManagerService>();
         }
     }
 }

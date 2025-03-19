@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using App.Core.Entities;
 
 namespace App.DAL.Presistence
 {
@@ -22,7 +23,7 @@ namespace App.DAL.Presistence
         {
             _claimService = claimService;
         }
-
+        public DbSet<Graduate> Graduates { get; set; }
         // Models here!!!
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

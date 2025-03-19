@@ -22,13 +22,13 @@ namespace App.Business.MappingProfiles.Commons
         {
             if (source.Image != null)
             {
-                var uploadedUrl = _fileManagerService.UploadFileAsync(source.Image).Result;
+                //var uploadedUrl = _fileManagerService.UploadLocalAsync(source.Image).Result;
                 var property = destination.GetType().GetProperty("ImageUrl");
 
-                if (property != null && property.PropertyType == typeof(string))
-                {
-                    property.SetValue(destination, uploadedUrl);
-                }
+                //if (property != null && property.PropertyType == typeof(string))
+                //{
+                //    property.SetValue(destination, uploadedUrl);
+                //}
             }
         }
     }

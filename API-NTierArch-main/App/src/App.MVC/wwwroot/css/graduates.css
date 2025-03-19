@@ -1,0 +1,336 @@
+﻿@media (max-width: 1024px) {
+    .container {
+        padding: 15px;
+    }
+
+    .table-container {
+        padding: 20px;
+    }
+
+    .graduates-table th,
+    .graduates-table td {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .detail-link, .delete-btn {
+        width: 80px;
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .profile-photo {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+@media (max-width: 768px) {
+    .table-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .search-box input {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .export-btn {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+
+    .graduates-table {
+        font-size: 12px;
+    }
+
+        .graduates-table th,
+        .graduates-table td {
+            padding: 8px;
+        }
+
+    .detail-link, .delete-btn {
+        width: 70px;
+        font-size: 11px;
+        padding: 5px 10px;
+    }
+
+    .profile-photo {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+
+    .table-container {
+        padding: 15px;
+    }
+
+    .graduates-table,
+    .graduates-table thead {
+        display: none;
+    }
+
+        .graduates-table tbody {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .graduates-table tr {
+            display: flex;
+            flex-direction: column;
+            background: white;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .graduates-table td {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            font-size: 12px;
+        }
+
+    .profile-photo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .detail-link, .delete-btn {
+        width: 60px;
+        font-size: 10px;
+        padding: 4px 8px;
+    }
+
+    .export-btn {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .search-box input {
+        font-size: 12px;
+        padding: 8px;
+    }
+}
+@media (max-width: 1280px) {
+    .container {
+        padding: 20px;
+    }
+
+    .table-container {
+        padding: 25px;
+    }
+
+    .graduates-table th,
+    .graduates-table td {
+        font-size: 15px;
+        padding: 12px;
+    }
+
+    .detail-link, .delete-btn {
+        width: 90px;
+        font-size: 13px;
+        padding: 7px 14px;
+    }
+
+    .profile-photo {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .container {
+        padding: 15px;
+    }
+
+    .table-container {
+        padding: 20px;
+    }
+
+    .graduates-table th,
+    .graduates-table td {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .detail-link, .delete-btn {
+        width: 80px;
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .profile-photo {
+        width: 60px;
+        height: 60px;
+    }
+
+    .export-btn {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .table-container {
+        padding: 18px;
+    }
+
+    .table-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .search-box input {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .graduates-table {
+        font-size: 12px;
+    }
+
+        .graduates-table th,
+        .graduates-table td {
+            padding: 8px;
+        }
+
+    .detail-link, .delete-btn {
+        width: 70px;
+        font-size: 11px;
+        padding: 5px 10px;
+    }
+
+    .profile-photo {
+        width: 50px;
+        height: 50px;
+    }
+
+    .export-btn {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+}
+
+@media (max-width: 600px) {
+    h1 {
+        font-size: 1.6em;
+    }
+
+    .table-container {
+        padding: 15px;
+    }
+
+    .table-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .search-box input {
+        font-size: 13px;
+        padding: 9px;
+    }
+
+    .graduates-table th,
+    .graduates-table td {
+        font-size: 11px;
+        padding: 6px;
+    }
+
+    .detail-link, .delete-btn {
+        width: 65px;
+        font-size: 10px;
+        padding: 4px 8px;
+    }
+
+    .profile-photo {
+        width: 45px;
+        height: 45px;
+    }
+
+    .export-btn {
+        font-size: 13px;
+        padding: 7px 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+
+    .table-container {
+        padding: 15px;
+    }
+
+    .graduates-table,
+    .graduates-table thead {
+        display: none;
+    }
+
+        .graduates-table tbody {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .graduates-table tr {
+            display: flex;
+            flex-direction: column;
+            background: white;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .graduates-table td {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            font-size: 12px;
+        }
+
+    .profile-photo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .detail-link, .delete-btn {
+        width: 60px;
+        font-size: 10px;
+        padding: 4px 8px;
+    }
+
+    .export-btn {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .search-box input {
+        font-size: 12px;
+        padding: 8px;
+    }
+}

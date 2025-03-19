@@ -24,40 +24,22 @@ namespace App.Business.Services.ExternalServices.Abstractions
             return file != null && file.ContentType.Contains("image") && 1024 * 1024 * 5 >= file.Length;
         }
 
-        public async Task<string> UploadFileAsync(IFormFile file)
+        
+
+        public async Task<string> UploadLocalAsync(IFormFile file,string folderName,string _webHostEnvironment)
         {
-            string fileName = await UploadLocalAsync(file);
+            var uploadsFolder = Path.Combine(_webHostEnvironment, "Uploads", folderName);
+            Directory.CreateDirectory(uploadsFolder); // Ensure folder exists
 
-            return "https://www.example.com/uploads/" + fileName;
-        }
-
-        public async Task<string> UploadLocalAsync(IFormFile file)
-        {
-            if (file == null || file.Length == 0)
-                throw new ArgumentException("The file parameter cannot be null.");
-
-            if (!BeAValidImage(file))
-                throw new Exception("The file format is not valid. You have to upload image type file and it should be maximum 5MB.");
-
-            var fileName = Guid.NewGuid().ToString() + "_" +
-                Path.GetFileNameWithoutExtension(file.FileName) +
-                Path.GetExtension(file.FileName);
-
-            var uploadsPath = Path.Combine(_environment.WebRootPath, "uploads");
-
-            if (!Directory.Exists(uploadsPath))
-            {
-                Directory.CreateDirectory(uploadsPath);
-            }
-
-            var filePath = Path.Combine(uploadsPath, fileName);
+            var uniqueFileName = $"{Guid.NewGuid()}_{file.FileName}";
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
 
-            return fileName;
+            return $"/Uploads/{folderName}/{uniqueFileName}"; // Return relative path
         }
     }
 }
