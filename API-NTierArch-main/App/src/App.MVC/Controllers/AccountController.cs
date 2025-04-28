@@ -1,7 +1,10 @@
 ﻿using System.Threading.Tasks;
 using App.Business.DTOs;
 using App.Business.Services.InternalServices.Interfaces;
+using App.Core.Entities.Identity;
+using App.Core.Enums;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.MVC.Controllers
@@ -9,10 +12,14 @@ namespace App.MVC.Controllers
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
+        private readonly UserManager<User> userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             _accountService = accountService;
+            this.userManager = userManager;
+            _roleManager = roleManager;
         }
 
         [AllowAnonymous]
@@ -32,12 +39,54 @@ namespace App.MVC.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginUserDTO loginUserDTO)
         {
+           
             var result = await _accountService.LoginAsync(loginUserDTO.Username, loginUserDTO.Password);
-            if (result.Succeeded) return RedirectToAction("Index", "Home");
+            if (result.Succeeded)
+            {
+                Console.WriteLine($"asddsasaadssda");
+                return RedirectToAction("Index", "Home");
+            }
 
             ModelState.AddModelError("", "Daxil etdiyiniz məlumatlar səhvdir");
 
             return View(loginUserDTO);  
+        }
+        public async Task<IActionResult> Test()
+        {
+            var newUser = new User
+            {
+                UserName = "ismayil1",
+                Email = "ismayil2@gmail.com",
+                EmailConfirmed = true,
+            };
+
+             var result = await userManager.CreateAsync(newUser, "Ii05182609*");
+
+             if (result.Succeeded)
+            {
+                 var addToRoleResult = await userManager.AddToRoleAsync(newUser, EUserRole.Admin.ToString());
+
+                if (addToRoleResult.Succeeded)
+                {
+                    Console.WriteLine("User created and added to role successfully!");
+                }
+                else
+                {
+                     foreach (var error in addToRoleResult.Errors)
+                    {
+                        Console.WriteLine($"Role Assignment Error: {error.Description}");
+                    }
+                }
+            }
+            else
+            {
+                 foreach (var error in result.Errors)
+                {
+                    Console.WriteLine($"User Creation Error: {error.Description}");
+                }
+            }
+
+            return View(newUser);
         }
 
 
@@ -90,7 +139,21 @@ namespace App.MVC.Controllers
         }
 
 
+        public async Task<IActionResult> CreateRoles()
+        {
+            foreach (var item in typeof(EUserRole).GetEnumValues())
+            {
+                if (!await _roleManager.RoleExistsAsync(item.ToString()))
+                {
+                    await _roleManager.CreateAsync(new IdentityRole()
+                    {
+                        Name = item.ToString(),
 
+                    });
+                }
+            }
+            return Json(new { success = true });
+        }
         public class DeleteUserRequest
         {
             public string Username { get; set; }

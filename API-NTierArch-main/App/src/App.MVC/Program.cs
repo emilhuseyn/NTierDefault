@@ -9,6 +9,8 @@ builder.Services.AddControllersWithViews();
 builder.Services
     .AddDataAccess(builder.Configuration)
     .AddBusiness();
+builder.Services.AddHttpContextAccessor();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -21,7 +23,7 @@ if (!app.Environment.IsDevelopment())
 
 
 app.UseStaticFiles();
-app.UseIpRateLimiting();
+ 
 
 app.UseRouting();
 //app.UseHttpsRedirection();

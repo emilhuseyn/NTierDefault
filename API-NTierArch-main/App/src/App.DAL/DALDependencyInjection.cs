@@ -54,6 +54,7 @@ namespace App.DAL
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.DefaultLockoutTimeSpan= TimeSpan.FromMinutes(5);
 
                 options.User.AllowedUserNameCharacters =
                     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
@@ -66,6 +67,7 @@ namespace App.DAL
             var internalServices = new Dictionary<Type, Type>
             {
                 { typeof(IGraduateRepository), typeof(GraduateRepository) },
+                { typeof(ILogsRepository), typeof(LogsRepository) },
                
             };
 

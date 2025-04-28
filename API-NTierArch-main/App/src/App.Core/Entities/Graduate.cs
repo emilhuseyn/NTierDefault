@@ -12,6 +12,7 @@ namespace App.Core.Entities
         public string Name { get; set; }
         public string Surname { get; set; }
         public string FatherName { get; set; }
+        public bool IsReference { get; set; }
         public string? Telephone { get; set; }
         public string PhotoUrl { get; set; }
         public string IdUrl { get; set; }

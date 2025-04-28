@@ -23,7 +23,7 @@ namespace App.DAL.Presistence
 
             var adminExists = await userManager.FindByNameAsync("admin");
             var modExists = await userManager.FindByNameAsync("moderator");
-
+ 
             if (adminExists == null)
             {
                 var userAdmin = new User { UserName = "Emil", Email = "admin@admin.com", EmailConfirmed = true };
@@ -37,6 +37,8 @@ namespace App.DAL.Presistence
                 await userManager.CreateAsync(userMod, "!Mod123.?Back3ndFr0nt3nd@");
                 await userManager.AddToRoleAsync(userMod, EUserRole.Moderator.ToString());
             }
+
+             
 
             await context.SaveChangesAsync();
         }

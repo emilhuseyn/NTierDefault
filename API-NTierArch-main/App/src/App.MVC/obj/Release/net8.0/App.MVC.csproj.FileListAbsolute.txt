@@ -188,3 +188,5 @@ C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\sr
 C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\src\App.MVC\obj\Release\net8.0\ref\App.MVC.dll
 C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\src\App.MVC\bin\Release\net8.0\AspNetCoreRateLimit.dll
 C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\src\App.MVC\bin\Release\net8.0\wwwroot\email_template.html
+C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\src\App.MVC\bin\Release\net8.0\DinkToPdf.dll
+C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\src\App.MVC\bin\Release\net8.0\UAParser.dll

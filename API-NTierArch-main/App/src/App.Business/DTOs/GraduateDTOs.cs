@@ -18,7 +18,8 @@ namespace App.Business.DTOs
         public IFormFile Photo { get; set; }
         public IFormFile ImageId { get; set; }
         public string EducationLevel { get; set; }
-     
+        public bool IsReference { get; set; }
+
         public string Email { get; set; }
         public string Faculty { get; set; }
         public string Group { get; set; }
@@ -28,6 +29,7 @@ namespace App.Business.DTOs
         public string Name { get; set; }
         public string Surname { get; set; }
         public string EducationLevel { get; set; }
+        public bool IsReference { get; set; }
 
         public string FatherName { get; set; }
         public string? Telephone { get; set; }
@@ -54,6 +56,8 @@ namespace App.Business.DTOs
         public string? Telephone { get; set; }
         public string PhotoUrl { get; set; }
         public string IdUrl { get; set; }
+        public bool IsReference { get; set; }
+
         public string Email { get; set; }
         public bool IsInside { get; set; }
         public string Faculty { get; set; }

@@ -24,6 +24,7 @@ namespace App.DAL.Presistence
             _claimService = claimService;
         }
         public DbSet<Graduate> Graduates { get; set; }
+        public DbSet<Logs> Logs { get; set; }
         // Models here!!!
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

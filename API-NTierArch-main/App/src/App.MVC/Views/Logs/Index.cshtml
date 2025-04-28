@@ -1,0 +1,212 @@
+﻿@model IEnumerable<App.Business.DTOs.LogsDTO>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jurnal Siyahısı</title>
+    <link rel="stylesheet" href="~/css/indexcss.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .table-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .search-box {
+            position: relative;
+            width: 250px;
+        }
+
+            .search-box input {
+                width: 100%;
+                padding: 8px 30px 8px 10px;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+            }
+
+        .search-icon {
+            position: absolute;
+            right: 10px;
+            top: 8px;
+            font-size: 18px;
+            color: #666;
+        }
+
+        .export-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+            .export-btn:hover {
+                background-color: #45a049;
+            }
+
+        .logs-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .logs-table th, .logs-table td {
+                padding: 12px 15px;
+                border-bottom: 1px solid #ddd;
+                text-align: left;
+            }
+
+            .logs-table th {
+                background-color: #007bff;
+                color: white;
+            }
+
+            .logs-table tbody tr {
+                cursor: pointer;
+                transition: background 0.3s ease-in-out, box-shadow 0.2s ease-in-out;
+            }
+
+                .logs-table tbody tr:hover {
+                    background-color: #f0f8ff;
+                    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+                }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+            .delete-btn:hover {
+                background-color: #c82333;
+            }
+
+        #resultCount {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        
+
+        .search-box {
+            width: 100%;
+        }
+
+        .logs-table th, .logs-table td {
+            font-size: 14px;
+        }
+
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Jurnallar</h1>
+
+        <div class="table-actions">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Axtar..." onkeyup="filterTable()">
+                <span class="search-icon">🔍</span>
+            </div>
+            <button class="export-btn" onclick="exportToExcel()">📤 Excelə Yüklə</button>
+        </div>
+
+        <p id="resultCount"></p>
+
+        <table class="logs-table">
+            <thead>
+                <tr>
+                    <th>İstifadəçi Adı</th>
+                    <th>Yaradılma Tarixi</th>
+                    <th>Mesaj</th>
+                    <th>IP Ünvanı</th>
+                    <th>ƏS və Brauzer</th>
+                    <th>Cihaz</th>
+                    <th>Location</th>
+
+                    <th>Əməliyyat</th>
+                </tr>
+            </thead>
+            <tbody id="logsTableBody">
+                @foreach (var log in Model.OrderByDescending(x=>x.CreatedOn))
+                {
+                    <tr data-log-id="@log.Id" onclick="goToDetails(@log.Id)" style="background-color:@(log.Message?.ToLower().Contains("yaradıldı") == true ? "#d4edda" : log.Message?.ToLower().Contains("silindi") == true ? "#f8d7da" : "transparent")">
+                        <td>@log?.Username</td>
+                        <td>@log?.CreatedOn</td>
+                        <td>@log?.Message</td>
+                        <td>@log?.IPAddress</td>
+                        <td>@log?.OS<br /><i>@log?.Browser</i></td>
+                        <td>@log?.Device</td>
+                        <td>@log?.Location</td>
+
+                        <td>
+                            <form asp-action="Delete" asp-controller="Logs" asp-route-id="@log.Id" method="post" onsubmit="return confirm('Silmək istədiyinizə əminsiniz?')">
+                                <button type="submit" class="action-btn delete-btn">🗑 Sil</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+
+    <script>
+        function filterTable() {
+            const input = document.getElementById("searchInput").value.toLowerCase();
+            const rows = document.querySelectorAll("#logsTableBody tr");
+            let count = 0;
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll("td");
+                const text = Array.from(cells).map(cell => cell.textContent.toLowerCase()).join(" ");
+                const show = text.includes(input);
+                row.style.display = show ? "" : "none";
+                if (show) count++;
+            });
+
+            document.getElementById("resultCount").textContent = `Nəticə sayı: ${count}`;
+        }
+
+        function exportToExcel() {
+            const table = document.querySelector(".logs-table");
+            const workbook = XLSX.utils.table_to_book(table, { sheet: "Jurnallar" });
+            XLSX.writeFile(workbook, "Jurnallar.xlsx");
+        }
+    </script>
+
+</body>
+</html>

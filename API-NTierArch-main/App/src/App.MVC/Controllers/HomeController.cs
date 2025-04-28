@@ -9,6 +9,14 @@ using App.Business.Services.InternalServices.Interfaces;
 using FluentValidation;
 using OfficeOpenXml;
 using App.DAL.Repositories.Interfaces;
+using App.Core.Enums;
+using Microsoft.AspNetCore.Identity;
+using App.Core.Entities.Identity;
+using UAParser;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using App.Core.Entities;
+using Microsoft.EntityFrameworkCore;
+using App.DAL.Presistence;
 
 namespace App.MVC.Controllers
 {
@@ -17,6 +25,9 @@ namespace App.MVC.Controllers
     {
         private readonly IGraduateRepository _graduateRepository;
         private readonly IGraduateService _graduateService;
+        private readonly AppDbContext _appDbContext;
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
         private readonly IValidator<CreateGraduateDTO> _createValidator;
         private readonly IValidator<UpdateGraduateDTO> _updateValidator;
         private readonly IValidator<DeleteGraduateDTO> _deleteValidator;
@@ -28,7 +39,9 @@ namespace App.MVC.Controllers
             IValidator<UpdateGraduateDTO> updateValidator,
             IValidator<DeleteGraduateDTO> deleteValidator,
             IValidator<GetByIdGraduateDTO> getByIdValidator,
-            IGraduateRepository graduateRepository)
+            IGraduateRepository graduateRepository,
+            UserManager<User> userManager,
+            AppDbContext appDbContext)
         {
             _graduateService = graduateService;
             _createValidator = createValidator;
@@ -36,13 +49,41 @@ namespace App.MVC.Controllers
             _deleteValidator = deleteValidator;
             _getByIdValidator = getByIdValidator;
             _graduateRepository = graduateRepository;
+            this.userManager = userManager;
+            _appDbContext = appDbContext;
         }
         [Authorize(Roles = "Moderator,Admin")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search, int page = 1, int pageSize = 10)
         {
-            var graduates = await _graduateService.GetAllAsync();
-            var orderedGraduates = graduates.OrderByDescending(g => g.CreatedOn).ToList();
-            return View(orderedGraduates);
+             var allGraduates = await _graduateService.GetAllAsync();
+
+             var graduatesList = allGraduates.ToList();
+
+             var filteredGraduates = graduatesList;
+            if (!string.IsNullOrEmpty(search))
+            {
+                search = search.ToLower();
+                filteredGraduates = graduatesList.Where(g =>
+                    g.Name.ToLower().Contains(search) ||
+                    g.Surname.ToLower().Contains(search) ||
+                    g.Email.ToLower().Contains(search)
+                ).ToList();
+            }
+
+             var orderedGraduates = filteredGraduates.OrderByDescending(g => g.CreatedOn).ToList();
+            int totalItems = orderedGraduates.Count;
+            var pagedGraduates = orderedGraduates
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+   
+            ViewBag.AllGraduates = graduatesList; 
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+            ViewBag.SearchTerm = search;
+
+            return View(pagedGraduates);
         }
 
 
@@ -52,6 +93,41 @@ namespace App.MVC.Controllers
             var model = new CreateGraduateDTO();
             return View(model);
         }
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CreateFakeGraduates()
+        {
+            var graduates = new List<Graduate>();
+
+            for (int i = 1; i <= 10000; i++)
+            {
+                var graduate = new Graduate
+                {
+                    Name = $"Name{i}",
+                    Surname = $"Surname{i}",
+                    FatherName = $"Father{i}",
+                    IsReference = i % 2 == 0, // Every second graduate is a reference
+                    Telephone = $"050-123-45{i:D2}",
+                    PhotoUrl = "/uploads/photos/default.png", // example default
+                    IdUrl = "/uploads/ids/default.png",
+                    Email = $"graduate{i}@example.com",
+                    QrCodeUrl = null,
+                    EducationLevel = (i % 2 == 0) ? "Bakalavr" : "Magistr",
+                    IsInside = i % 2 != 0,
+                    Faculty = $"Faculty{i % 10}", // 10 different faculties
+                    Group = $"Group{i % 5}" // 5 different groups
+                };
+
+                graduates.Add(graduate);
+            }
+
+            // Now save all graduates to DB
+            await _appDbContext.Graduates.AddRangeAsync(graduates);
+            await _appDbContext.SaveChangesAsync();
+
+            return Ok(new { message = "100 graduates created successfully!" });
+        }
+
+
 
         [HttpPost]
         [Authorize(Roles = "Moderator,Admin")]
@@ -67,8 +143,10 @@ namespace App.MVC.Controllers
 
                 return View(createDTO);
             }
-
+             
             await _graduateService.CreateAsync(createDTO);
+
+             
             return RedirectToAction("Index");
         }
 
@@ -153,6 +231,7 @@ namespace App.MVC.Controllers
             {
                 var worksheet = package.Workbook.Worksheets.Add("Graduates");
 
+                // Set headers
                 worksheet.Cells[1, 1].Value = "Ad";
                 worksheet.Cells[1, 2].Value = "Soyad";
                 worksheet.Cells[1, 3].Value = "Ata Adı";
@@ -161,7 +240,7 @@ namespace App.MVC.Controllers
                 worksheet.Cells[1, 6].Value = "Qrup";
                 worksheet.Cells[1, 7].Value = "Kategoriya";
 
-                for (int i = 0; i < data.Count; i++)
+                 for (int i = 0; i < data.Count; i++)
                 {
                     worksheet.Cells[i + 2, 1].Value = data[i].Name;
                     worksheet.Cells[i + 2, 2].Value = data[i].Surname;
@@ -174,28 +253,32 @@ namespace App.MVC.Controllers
 
                 worksheet.Cells.AutoFitColumns();
 
-                string fileName = "Graduates.xlsx";
-                bool sameFaculty = data.All(d => d.Faculty == data[0].Faculty);
-                bool sameGroup = data.All(d => d.Group == data[0].Group);
-                bool sameEduLevel = data.All(d => d.EducationLevel == data[0].EducationLevel);
+                 string fileName = "Graduates.xlsx";
 
-                if (sameFaculty && sameGroup && sameEduLevel)
-                    fileName = $"Graduates_{data[0].Faculty}_{data[0].Group}_{data[0].EducationLevel}.xlsx";
-                else if (sameFaculty && sameEduLevel)
-                    fileName = $"Graduates_{data[0].Faculty}_{data[0].EducationLevel}.xlsx";
-                else if (sameGroup && sameEduLevel)
-                    fileName = $"Graduates_{data[0].Group}_{data[0].EducationLevel}.xlsx";
-                else if (sameFaculty)
-                    fileName = $"Graduates_{data[0].Faculty}.xlsx";
-                else if (sameGroup)
-                    fileName = $"Graduates_{data[0].Group}.xlsx";
-                else if (sameEduLevel)
-                    fileName = $"Graduates_{data[0].EducationLevel}.xlsx";
+                 if (data.Count > 0)
+                {
+                    var firstItem = data[0];
+                    bool sameFaculty = data.All(d => d.Faculty == firstItem.Faculty);
+                    bool sameGroup = data.All(d => d.Group == firstItem.Group);
+                    bool sameEduLevel = data.All(d => d.EducationLevel == firstItem.EducationLevel);
+
+                    if (sameFaculty && sameGroup && sameEduLevel)
+                        fileName = $"Graduates_{firstItem.Faculty}_{firstItem.Group}_{firstItem.EducationLevel}.xlsx";
+                    else if (sameFaculty && sameEduLevel)
+                        fileName = $"Graduates_{firstItem.Faculty}_{firstItem.EducationLevel}.xlsx";
+                    else if (sameGroup && sameEduLevel)
+                        fileName = $"Graduates_{firstItem.Group}_{firstItem.EducationLevel}.xlsx";
+                    else if (sameFaculty)
+                        fileName = $"Graduates_{firstItem.Faculty}.xlsx";
+                    else if (sameGroup)
+                        fileName = $"Graduates_{firstItem.Group}.xlsx";
+                    else if (sameEduLevel)
+                        fileName = $"Graduates_{firstItem.EducationLevel}.xlsx";
+                }
 
                 var stream = new MemoryStream();
                 await package.SaveAsAsync(stream);
                 stream.Position = 0;
-
                 return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
             }
         }

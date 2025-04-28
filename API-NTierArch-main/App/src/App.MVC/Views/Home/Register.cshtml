@@ -24,6 +24,65 @@
         text-align: center;
     }
 
+    .custom-checkbox {
+        position: relative;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        font-size: 16px;
+        user-select: none;
+        padding-left: 30px;
+        margin-top: 10px;
+    }
+
+        .custom-checkbox input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+    .checkmark {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 20px;
+        width: 20px;
+        background-color: #e2e8f0;
+        border-radius: 4px;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .custom-checkbox:hover .checkmark {
+        background-color: #cbd5e1;
+    }
+
+    .custom-checkbox input:checked ~ .checkmark {
+        background-color: #2563eb;
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    .custom-checkbox input:checked ~ .checkmark:after {
+        display: block;
+    }
+
+    .custom-checkbox .checkmark:after {
+        left: 7px;
+        top: 3px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
         .change-btn:hover {
             background-color: #1d4ed8;
             transform: scale(1.05);
@@ -57,6 +116,121 @@
         display: block;
     }
 
+    .custom-modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+        animation: fadeIn 0.3s;
+    }
+
+   /*   keyframes fadeIn {
+        from
+
+    {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+    } */
+
+    .modal-content {
+        background-color: #ffffff;
+        margin: 15% auto;
+        max-width: 400px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        animation: slideIn 0.4s;
+        overflow: hidden;
+    }
+
+    /*  keyframes slideIn {
+        from
+
+    {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    } */
+
+    }
+
+    .modal-header {
+        background-color: #2563eb;
+        color: white;
+        padding: 15px 20px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+    }
+
+        .modal-header i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+    .modal-body {
+        padding: 20px;
+        color: #1f2937;
+        font-size: 16px;
+        line-height: 1.5;
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        padding: 15px 20px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .modal-btn {
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-left: 10px;
+    }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .modal-btn:active {
+            transform: translateY(1px);
+        }
+
+    .cancel-btn {
+        background-color: #f3f4f6;
+        color: #4b5563;
+        border: 1px solid #e5e7eb;
+    }
+
+        .cancel-btn:hover {
+            background-color: #e5e7eb;
+        }
+
+    .confirm-btn {
+        background-color: #2563eb;
+        color: white;
+        border: none;
+    }
+
+        .confirm-btn:hover {
+            background-color: #1d4ed8;
+        }
         .image-drop-area:hover {
             border-color: #2563eb;
         }
@@ -66,7 +240,19 @@
         color: #6b7280;
     }
 </style>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<div id="confirmModal" class="custom-modal">
+    <div class="modal-content">
+         
+        <div class="modal-body">
+            Arayış olduğuna əminsən?
+        </div>
+        <div class="modal-footer">
+            <button id="cancelBtn" type="button" class="modal-btn cancel-btn">Xeyr</button>
+            <button id="confirmBtn" type="button" class="modal-btn confirm-btn">Bəli, əminəm</button>
+        </div>
+    </div>
+</div>
 <main class="main-container">
     <div class="container">
         <div class="card">
@@ -119,6 +305,7 @@
                             <option value="SEP">SEP</option>
                             <option value="SABAH qrupları">SABAH qrupları</option>
                             <option value="Əlavə təhsil">Əlavə təhsil</option>
+                            <option value="Digər">Digər</option>
                         </select>
                         <span asp-validation-for="Faculty" class="text-danger"></span>
                     </div>
@@ -139,6 +326,15 @@
                         </select>
                         <span asp-validation-for="EducationLevel" class="text-danger"></span>
                     </div>
+                    <div class="form-group">
+                        <label class="custom-checkbox">
+                            Arayış
+                            <input asp-for="IsReference" id="termsCheckbox" onclick="showWarning(this)">
+                            <span class="checkmark"></span>
+                        </label>
+                        <span asp-validation-for="IsReference" class="text-danger"></span>
+                    </div>
+
 
                 </div>
 
@@ -208,6 +404,34 @@
         function triggerFileInput(inputId) {
             document.getElementById(inputId).click();
         }
+             function showWarning(checkbox) {
+            if (checkbox.checked) {
+                // Modal pəncərəsini göstər
+                document.getElementById('confirmModal').style.display = 'block';
+
+                // Cavab variantlarına event listener əlavə et
+                document.getElementById('confirmBtn').onclick = function() {
+                    // İstifadəçi təsdiq etdiyi halda checkbox seçilmiş qalır
+                    checkbox.checked = true;
+                    document.getElementById('confirmModal').style.display = 'none';
+                }
+
+                document.getElementById('cancelBtn').onclick = function() {
+                    // İstifadəçi təsdiq etmədiyi halda checkbox seçilməmiş olur
+                    checkbox.checked = false;
+                    document.getElementById('confirmModal').style.display = 'none';
+                }
+
+                // Modal xaricində basdıqda əməliyyatı ləğv et
+                window.onclick = function(event) {
+                    if (event.target == document.getElementById('confirmModal')) {
+                        checkbox.checked = false;
+                        document.getElementById('confirmModal').style.display = 'none';
+                    }
+                }
+            }
+        }
+
 
         function previewImage(input, previewId, changeBtnId) {
             let file = input.files[0];

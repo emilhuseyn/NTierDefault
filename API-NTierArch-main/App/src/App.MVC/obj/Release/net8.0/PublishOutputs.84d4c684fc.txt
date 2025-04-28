@@ -10,6 +10,7 @@ C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\sr
 C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\src\App.MVC\obj\Release\net8.0\PubTmp\Out\Azure.Core.dll
 C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\src\App.MVC\obj\Release\net8.0\PubTmp\Out\Azure.Identity.dll
 C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\src\App.MVC\obj\Release\net8.0\PubTmp\Out\BouncyCastle.Cryptography.dll
+C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\src\App.MVC\obj\Release\net8.0\PubTmp\Out\DinkToPdf.dll
 C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\src\App.MVC\obj\Release\net8.0\PubTmp\Out\EPPlus.dll
 C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\src\App.MVC\obj\Release\net8.0\PubTmp\Out\EPPlus.Interfaces.dll
 C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\src\App.MVC\obj\Release\net8.0\PubTmp\Out\EPPlus.System.Drawing.dll
@@ -80,6 +81,7 @@ C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\sr
 C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\src\App.MVC\obj\Release\net8.0\PubTmp\Out\System.Security.Cryptography.ProtectedData.dll
 C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\src\App.MVC\obj\Release\net8.0\PubTmp\Out\System.Security.Permissions.dll
 C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\src\App.MVC\obj\Release\net8.0\PubTmp\Out\System.Windows.Extensions.dll
+C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\src\App.MVC\obj\Release\net8.0\PubTmp\Out\UAParser.dll
 C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\src\App.MVC\obj\Release\net8.0\PubTmp\Out\ZstdSharp.dll
 C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\src\App.MVC\obj\Release\net8.0\PubTmp\Out\cs\Microsoft.CodeAnalysis.resources.dll
 C:\Users\emil.huseynov.zabil\source\repos\QRMezuniyyet\API-NTierArch-main\App\src\App.MVC\obj\Release\net8.0\PubTmp\Out\de\Microsoft.CodeAnalysis.resources.dll

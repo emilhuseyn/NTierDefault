@@ -9,90 +9,286 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Graduates List</title>
-	 <link rel="stylesheet" href="~/css/indexcss.css"> 
+	<link rel="stylesheet" href="~/css/indexcss.css">
 	<style>		/* Make the entire row clickable */
-		.graduates-table tbody tr {
-			cursor: pointer; /* Shows pointer cursor on hover */
-			transition: background 0.3s ease-in-out, box-shadow 0.2s ease-in-out;
+		.graduates-table-container {
+			overflow-x: auto; /* Enable horizontal scrolling */
+			max-width: 100%; /* Make sure the table doesn't overflow beyond the container */
 		}
 
-			.graduates-table tbody tr:hover {
-				background-color: #f0f8ff; /* Light blue highlight on hover */
-				box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-			}
-
-		/* Remove pointer effect from delete button */
-		.delete-btn {
-			cursor: default !important; /* Prevents row click behavior */
+		/* Table styling */
+		.graduates-table {
+			width: 100%; /* Ensure the table takes the full width of its container */
+			table-layout: fixed; /* Force columns to have fixed widths */
 		}
 
-			/* Ensure Delete Button does not trigger row click */
-			.delete-btn:hover {
-				opacity: 0.8;
+		.pagination {
+			text-align: center;
+			margin-top: 20px;
+		}
+
+		.page-number {
+			display: inline-block;
+			margin: 0 5px;
+			padding: 6px 12px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			text-decoration: none;
+			color: #333;
+			cursor: pointer;
+		}
+
+			.page-number.active {
+				background-color: #007bff;
+				color: white;
+				font-weight: bold;
 			}
+
+			/* Table cell styling */
+			.graduates-table td {
+				overflow: hidden; /* Hide overflow text */
+				text-overflow: ellipsis; /* Add ellipsis at the end */
+				white-space: nowrap; /* Prevent text from wrapping */
+				min-width: 120px; /* Set a reasonable minimum width */
+			}
+
+		tr[data-education]:hover {
+			background-color: #f0f0f0;
+		}
+				/* Adjust individual columns for better control */
+				.graduates-table td:nth-child(2), /* Name */
+				.graduates-table td:nth-child(3), /* Surname */
+				.graduates-table td:nth-child(4), 
+				.graduates-table td:nth-child(5),  
+				.graduates-table td:nth-child(6), 
+				.graduates-table td:nth-child(7), 
+				.graduates-table td:nth-child(8) {  
+					min-width: 150px; 
+				}
 	</style>
 </head>
 <body>
-	<!-- Graduates List View -->
  
+	<div class="container">
+		<h1>Məzunlar</h1>
+		<tbody id="graduatesTableBody">
+		</tbody>
+		<script>
+			// Store all graduates for filtering
+			var allGraduates = @Html.Raw(Json.Serialize(ViewBag.AllGraduates));
+			// Store current page graduates for display
+			var currentGraduates = @Html.Raw(Json.Serialize(Model));
+		</script>
+		<script>
+			var allGraduates = @Html.Raw(Json.Serialize(ViewBag.AllGraduates));
 
-<div class="container">
-    <h1>Məzunlar</h1>
+				function exportToExcel() {
+					// Use the filtered data if there's a search, otherwise use all data
+					var input = document.getElementById("searchInput").value.toLowerCase();
+					var dataToExport = [];
 
+					if (input.trim() === "") {
+						// No search - export all graduates
+						dataToExport = allGraduates;
+					} else {
+						// Filter based on search criteria
+								dataToExport = allGraduates.filter(grad =>
+					(grad.name?.toLowerCase() || "").includes(input) ||
+					(grad.surname?.toLowerCase() || "").includes(input) ||
+					(grad.fatherName?.toLowerCase() || "").includes(input) ||
+					(grad.email?.toLowerCase() || "").includes(input) ||
+					(grad.faculty?.toLowerCase() || "").includes(input) ||
+					(grad.group?.toLowerCase() || "").includes(input) ||
+					(grad.educationLevel?.toLowerCase() || "").includes(input) ||
+					(grad.isReference ? "bəli" : "xeyr").includes(input)
+				);
+
+					}
+
+					if (dataToExport.length === 0) {
+						alert("Ixrac etmək üçün məlumat yoxdur!");
+						return;
+					}
+
+					// Prepare data for export
+					var exportData = dataToExport.map(grad => ({
+						Name: grad.name,
+						Surname: grad.surname,
+						FatherName: grad.fatherName,
+						Email: grad.email,
+						Faculty: grad.faculty,
+						Group: grad.group,
+						EducationLevel: grad.educationLevel,
+						IsReferance: grad.IsReferance
+					}));
+
+					// Send data to server for Excel generation
+					fetch("/Home/ExportToExcel", {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify(exportData)
+					})
+					.then(response => {
+						if (!response.ok) throw new Error("Server error: " + response.status);
+						return response.blob();
+					})
+					.then(blob => {
+						var link = document.createElement("a");
+						link.href = window.URL.createObjectURL(blob);
+						link.download = "Graduates.xlsx";
+						link.click();
+					})
+					.catch(error => {
+						console.error("Ixrac zamanı xəta baş verdi", error);
+						alert("Ixrac zamanı xəta baş verdi: " + error.message);
+					});
+				}
+
+		</script>
 		<div class="table-container">
 			<div class="table-actions">
-	<div class="search-box">
-		<input type="text" id="searchInput" placeholder="Axtar..." onkeyup="filterTable()">
-		<span class="search-icon">🔍</span>
-	</div>
+				<div class="search-box">
+					<input type="text" id="searchInput" placeholder="Axtar..." onkeyup="filterTable()">
+					<span class="search-icon">🔍</span>
+				</div>
 
- 
-
-	<button class="export-btn" onclick="exportToExcel()">📤 Excelə Yüklə</button>
-</div>
-<p id="resultCount" style="font-weight: bold; margin-top: 10px;"></p>
+				<button class="export-btn" onclick="exportToExcel()">📤 Excelə Yüklə</button>
+			</div>
+			<p id="resultCount" style="font-weight: bold; margin-top: 10px;"></p>
 
 			<table class="graduates-table">
 				<thead>
 					<tr>
-						<th>Şəkil</th>
-						<th>Ad</th>
+ 						<th>Ad</th>
 						<th>Soyad</th>
 						<th>Ata Adı</th>
 						<th>Email</th>
 						<th>Fakültə</th>
 						<th>Qrup</th>
 						<th>Kateqoriya</th>
+						<th>Arayış</th>
 						<th>Əməliyyat</th>
 					</tr>
 				</thead>
 				<tbody id="graduatesTableBody">
 					@foreach (var graduate in Model)
 					{
-						<tr data-education="@graduate.EducationLevel.ToLower()" onclick="goToDetails(@graduate.Id)">
-							<td>
-								<img src="@graduate.PhotoUrl" alt="Profile Image" class="profile-photo">
-							</td>
-							<td>@graduate.Name</td>
-							<td>@graduate.Surname</td>
-							<td>@graduate.FatherName</td>
-							<td>@graduate.Email</td>
-							<td>@graduate.Faculty</td>
-							<td>@graduate.Group</td>
-							<td>@graduate.EducationLevel</td>
+						<tr data-education="@graduate.EducationLevel.ToLower()">
+							 
+							<td onclick="goToDetails(@graduate.Id)">@graduate.Name</td>
+							<td onclick="goToDetails(@graduate.Id)">@graduate.Surname</td>
+							<td onclick="goToDetails(@graduate.Id)">@graduate.FatherName</td>
+							<td onclick="goToDetails(@graduate.Id)">@graduate.Email</td>
+							<td onclick="goToDetails(@graduate.Id)">@graduate.Faculty</td>
+							<td onclick="goToDetails(@graduate.Id)">@graduate.Group</td>
+							<td onclick="goToDetails(@graduate.Id)">@graduate.EducationLevel</td>
+							<td onclick="goToDetails(@graduate.Id)">@((graduate.IsReference) ? "Bəli" : "Xeyr")</td>
 							<td>
 								<button class="action-btn delete-btn" onclick="event.stopPropagation(); openDeleteModal(@graduate.Id)">🗑 Sil</button>
 							</td>
 						</tr>
 					}
+
+					<script>
+						function goToDetails(id) {
+							window.location.href = '/Home/Details/' + id;
+						}
+					</script>
+
 				</tbody>
 			</table>
+			
 
+			<div class="pagination">
+				@if (ViewBag.TotalPages > 1)
+				{
+					int maxVisiblePages = 5; // How many pages you want visible at once
 
+					int startPage = Math.Max(1, ViewBag.CurrentPage - maxVisiblePages / 2);
+					int endPage = Math.Min(ViewBag.TotalPages, startPage + maxVisiblePages - 1);
 
-			</table>
+					if (endPage == ViewBag.TotalPages)
+					{
+						startPage = Math.Max(1, endPage - maxVisiblePages + 1);
+					}
 
-			<!-- Delete Confirmation Modal -->
+					// Show first page + ellipsis if necessary
+					if (startPage > 1)
+					{
+						<a class="page-number" href="@Url.Action("Index", new { page = 1, search = ViewBag.SearchTerm })">1</a>
+						if (startPage > 2)
+						{
+							<span class="page-number">...</span>
+						}
+					}
+
+					// Show the middle pages
+					for (int i = startPage; i <= endPage; i++)
+					{
+						if (i == ViewBag.CurrentPage)
+						{
+							<span class="page-number active">@i</span>
+						}
+						else
+						{
+							<a class="page-number" href="@Url.Action("Index", new { page = i, search = ViewBag.SearchTerm })">@i</a>
+						}
+					}
+
+					// Show ellipsis + last page if necessary
+					if (endPage < ViewBag.TotalPages)
+					{
+						if (endPage < ViewBag.TotalPages - 1)
+						{
+							<span class="page-number">...</span>
+						}
+						<a class="page-number" href="@Url.Action("Index", new { page = ViewBag.TotalPages, search = ViewBag.SearchTerm })">@ViewBag.TotalPages</a>
+					}
+				}
+			</div>
+
+			<script>
+								function filterTable() {
+					var input = document.getElementById("searchInput").value.toLowerCase();
+					var tbody = document.getElementById("graduatesTableBody");
+					var paginationContainer = document.querySelector('.pagination');
+
+					var rows = allGraduates.filter(grad =>
+						grad.name.toLowerCase().includes(input) ||
+						grad.surname.toLowerCase().includes(input) ||
+						grad.fatherName.toLowerCase().includes(input) ||
+						grad.email.toLowerCase().includes(input) ||
+						grad.faculty.toLowerCase().includes(input) ||
+						grad.group.toLowerCase().includes(input) ||
+						grad.educationLevel.toLowerCase().includes(input) ||
+						grad.isReference.toString().toLowerCase().includes(input)
+					);
+
+					// Build HTML first
+					let html = "";
+					rows.forEach(grad => {
+						html += `
+							<tr onclick="goToDetails(${grad.id})">
+ 								<td>${grad.name}</td>
+								<td>${grad.surname}</td>
+								<td>${grad.fatherName}</td>
+								<td>${grad.email}</td>
+								<td>${grad.faculty}</td>
+								<td>${grad.group}</td>
+								<td>${grad.educationLevel}</td>
+								<td>${grad.isReference ? 'Bəli' : 'Xeyr'}</td>
+								<td><button class="action-btn delete-btn" onclick="event.stopPropagation(); openDeleteModal(${grad.id})">🗑 Sil</button></td>
+							</tr>
+						`;
+					});
+
+					tbody.innerHTML = html;
+
+					document.getElementById("resultCount").innerText = `Nəticə sayı: ${rows.length}`;
+					paginationContainer.style.display = input.trim() === "" ? 'block' : 'none';
+				}
+
+			</script>
 			<div id="deleteModal" class="modal">
 				<div class="modal-content">
 					<h2>Təsdiq</h2>
@@ -103,197 +299,265 @@
 					</div>
 				</div>
 			</div>
+			<script>
+					  let deleteGraduateId = null;
+					  function goToDetails(id) {
+			window.location.href = `/Home/Details/${id}`;
+		}
+
+					  function openDeleteModal(id) {
+						  deleteGraduateId = id;
+						  document.getElementById("deleteModal").style.display = "flex";
+					  }
+
+					  function closeDeleteModal() {
+						  deleteGraduateId = null;
+						  document.getElementById("deleteModal").style.display = "none";
+					  }
+
+					  document.getElementById("confirmDeleteBtn").addEventListener("click", function () {
+						  if (deleteGraduateId) {
+							  fetch(`/Home/Delete/${deleteGraduateId}`, {
+								  method: "POST",
+								  headers: { "Content-Type": "application/json" }
+							  })
+							  .then(response => {
+								  if (response.ok) {
+									  closeDeleteModal();
+									  location.reload();
+								  } else {
+									  alert("Silmə zamanı xəta baş verdi!");
+								  }
+							  })
+							  .catch(error => console.error("Silinmə zamanı xəta baş verdi", error));
+						  }
+					  });
+			</script>
 		</div>
 
-</div>
+	</div>
 
-<!-- Graduate Detail Modal -->
-<div class="detail-view" id="detailView">
-    <div class="detail-content">
-        <button class="close-btn" onclick="hideDetail()">×</button>
-        <div class="detail-header">
-            <h2>Məzun Məlumatları</h2>
-        </div>
-			<div class="detail-info">
-				<div class="info-group">
-					<label>Ad:</label>
-					<span id="detailName"></span>
-				</div>
-				<div class="info-group">
-					<label>Soyad:</label>
-					<span id="detailSurname"></span>
-				</div>
-				<div class="info-group">
-					<label>Ata Adı:</label>
-					<span id="detailFatherName"></span>
-				</div>
-				<div class="info-group">
-					<label>Email:</label>
-					<span id="detailEmail"></span>
-				</div>
-				<div class="info-group">
-					<label>Fakültə:</label>
-					<span id="detailFaculty"></span>
-				</div>
-				<div class="info-group">
-					<label>Qrup:</label>
-					<span id="detailGroup"></span>
-				</div>
-				<div class="info-group">
-					<label>Qeydiyyat tarixi:</label>
-					<span id="detailRegistrationDate"></span>
-				</div>
-			</div>
-
-
-        <!-- Profile and ID Images -->
-        <div class="detail-documents">
-            <h3>Sənədlər</h3>
-            <div class="document-links">
-                <img id="detailProfilePhoto" class="detail-image" alt="Profile Photo">
-                <img id="detailIdPhoto" class="detail-image" alt="ID Photo">
-            </div>
-        </div>
-    </div>
-</div>
-
+ 
 	<script>
-					function exportToExcel() {
-			var table = document.querySelectorAll("#graduatesTableBody tr");
-			var exportData = [];
+				// Get all graduates from the ViewBag
+		
 
-			table.forEach(row => {
-				if (row.style.display !== "none") {
-					var cols = row.getElementsByTagName("td");
-					if (cols.length >= 8) {
-						exportData.push({
-							Name: cols[1].innerText.trim(),
-							Surname: cols[2].innerText.trim(),
-							FatherName: cols[3].innerText.trim(),
-							Email: cols[4].innerText.trim(),
-							Faculty: cols[5].innerText.trim(),
-							Group: cols[6].innerText.trim(),
-							EducationLevel: cols[7].innerText.trim()
-						});
-					}
+					function showDetail(name, surname, fatherName, email, faculty, group, createdTime, photo, idImage) {
+					document.getElementById('detailName').innerText = name;
+					document.getElementById('detailSurname').innerText = surname;
+					document.getElementById('detailFatherName').innerText = fatherName;
+					document.getElementById('detailEmail').innerText = email;
+					document.getElementById('detailFaculty').innerText = faculty;
+					document.getElementById('detailGroup').innerText = group;
+					document.getElementById('detailRegistrationDate').innerText = createdTime;
+
+					 
+
+					document.getElementById('detailView').style.display = 'flex';
 				}
-			});
 
-			if (exportData.length === 0) {
-				alert("No data to export!");
-				return;
-			}
+								let deleteGraduateId = null;
 
-			console.log("Sending data:", exportData);
-
-			fetch("/Home/ExportToExcel", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(exportData)
-			})
-			.then(response => {
-				if (!response.ok) throw new Error("Server error: " + response.status);
-				return response.blob();
-			})
-			.then(blob => {
-				var link = document.createElement("a");
-				link.href = window.URL.createObjectURL(blob);
-				link.download = "Graduates.xlsx";
-				link.click();
-			})
-			.catch(error => console.error("Export failed", error));
-		}
-
-
-			function showDetail(name, surname, fatherName, email, faculty, group, createdTime, photo, idImage) {
-			document.getElementById('detailName').innerText = name;
-			document.getElementById('detailSurname').innerText = surname;
-			document.getElementById('detailFatherName').innerText = fatherName;
-			document.getElementById('detailEmail').innerText = email;
-			document.getElementById('detailFaculty').innerText = faculty;
-			document.getElementById('detailGroup').innerText = group;
-			document.getElementById('detailRegistrationDate').innerText = createdTime;
-
-			let profilePhoto = document.getElementById('detailProfilePhoto');
-			let idPhoto = document.getElementById('detailIdPhoto');
-
-			profilePhoto.src = photo || "/Uploads/default-profile.jpg";
-			idPhoto.src = idImage || "/Uploads/default-id.jpg";
-
-			document.getElementById('detailView').style.display = 'flex';
-		}
-
-						let deleteGraduateId = null;
-
-		function openDeleteModal(id) {
-			deleteGraduateId = id;
-			document.getElementById("deleteModal").style.display = "flex";
-		}
-
-		function closeDeleteModal() {
-			deleteGraduateId = null;
-			document.getElementById("deleteModal").style.display = "none";
-		}
-
-		document.getElementById("confirmDeleteBtn").addEventListener("click", function () {
-			if (deleteGraduateId) {
-				fetch(`/Home/Delete/${deleteGraduateId}`, {
-					method: "POST",
-					headers: { "Content-Type": "application/json" }
-				})
-				.then(response => {
-					if (response.ok) {
-						closeDeleteModal();
-						location.reload();
-					} else {
-						alert("Silmə zamanı xəta baş verdi!");
-					}
-				})
-				.catch(error => console.error("Silinmə zamanı xəta baş verdi", error));
-			}
-		});
+		 
 
 				function goToDetails(id) {
 			window.location.href = `/Home/Details/${id}`;
 		}
 
 
-    function hideDetail() {
-        document.getElementById('detailView').style.display = 'none';
-    }
+			function hideDetail() {
+				document.getElementById('detailView').style.display = 'none';
+			}
+					/**
+		 * Client-side pagination enhancement for graduates list
+				/**
+		 * Client-side pagination enhancement for graduates list
+		 */
+		document.addEventListener('DOMContentLoaded', function() {
+			// Get pagination elements
+			const paginationContainer = document.querySelector('.pagination');
+			if (!paginationContainer) return;
 
-				function filterTable() {
-	var input = document.getElementById("searchInput").value.toLowerCase();
-	var rows = document.getElementById("graduatesTableBody").getElementsByTagName("tr");
+			// Get total pages and current page from existing pagination elements
+			// This is more reliable than trying to access Razor variables directly in JavaScript
+			const totalPages = paginationContainer.querySelectorAll('.page-number').length || 1;
+			const currentPage = parseInt(paginationContainer.querySelector('.active')?.textContent) || 1;
+			const maxVisiblePages = 5; // Maximum number of page buttons to show
 
-	let count = 0; // Count Matching Results
+			// Store original pagination HTML in case we need to restore it
+			const originalPaginationHTML = paginationContainer.innerHTML;
 
-	for (var i = 0; i < rows.length; i++) {
-		var name = rows[i].getElementsByTagName("td")[1].innerText.toLowerCase();
-		var surname = rows[i].getElementsByTagName("td")[2].innerText.toLowerCase();
-		var fatherName = rows[i].getElementsByTagName("td")[3].innerText.toLowerCase();
-		var email = rows[i].getElementsByTagName("td")[4].innerText.toLowerCase();
-		var faculty = rows[i].getElementsByTagName("td")[5].innerText.toLowerCase();
-		var group = rows[i].getElementsByTagName("td")[6].innerText.toLowerCase();
-		var educationLevel = rows[i].getElementsByTagName("td")[7].innerText.toLowerCase(); // Fetch Education Level
+			// Create enhanced pagination controls
+			createPaginationControls(currentPage, totalPages, maxVisiblePages);
 
-		if (name.includes(input) || surname.includes(input) || fatherName.includes(input) ||
-			email.includes(input) || faculty.includes(input) || group.includes(input) || educationLevel.includes(input)) {
+			// Update result count on page load
+			updateResultCount();
 
-			rows[i].style.display = "";
-			count++; // Increase count for matched row
-		} else {
-			rows[i].style.display = "none";
+			// Add event listener to search input to handle pagination visibility
+			document.getElementById('searchInput').addEventListener('input', function() {
+				const isSearching = this.value.trim().length > 0;
+				paginationContainer.style.display = isSearching ? 'none' : 'block';
+			});
+		});
+ 		function renderTable(data) {
+			const tableBody = document.getElementById("graduatesTableBody");
+			tableBody.innerHTML = ""; // Clear existing rows
+
+			data.forEach(graduate => {
+				const row = document.createElement("tr");
+				row.setAttribute("data-education", graduate.educationLevel.toLowerCase());
+				row.onclick = () => goToDetails(graduate.id);
+
+				row.innerHTML = `
+					<td><img src="${graduate.photoUrl}" alt="Profile Image" class="profile-photo"></td>
+					<td>${graduate.name}</td>
+					<td>${graduate.surname}</td>
+					<td>${graduate.fatherName}</td>
+					<td>${graduate.email}</td>
+					<td>${graduate.faculty}</td>
+					<td>${graduate.group}</td>
+					<td>${graduate.educationLevel}</td>
+					<td>${graduate.IsReferance}</td>
+					<td><button class="action-btn delete-btn" onclick="event.stopPropagation(); openDeleteModal(${graduate.id})">🗑 Sil</button></td>
+				`;
+
+				tableBody.appendChild(row);
+			});
 		}
-	}
+ 
+		/**
+		 * Creates pagination controls with prev/next buttons and page numbers
+		 */
+		function createPaginationControls(currentPage, totalPages, maxVisiblePages) {
+			const paginationContainer = document.querySelector('.pagination');
 
-	// Show total count of matched records
-	document.getElementById("resultCount").innerText = "Nəticə: " + count;
-}
+			// Clear existing pagination
+			paginationContainer.innerHTML = '';
+
+			// Add previous button
+			if (totalPages > 1) {
+				const prevButton = document.createElement('a');
+				prevButton.classList.add('page-number');
+				prevButton.innerHTML = '&laquo;';
+				prevButton.href = currentPage > 1 ?
+					createPageUrl(currentPage - 1) : 'javascript:void(0)';
+				if (currentPage === 1) {
+					prevButton.style.opacity = '0.5';
+					prevButton.style.pointerEvents = 'none';
+				}
+				paginationContainer.appendChild(prevButton);
+			}
+
+			// Determine which page numbers to show
+			let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+			let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+			// Adjust startPage if endPage is at maximum
+			if (endPage === totalPages) {
+				startPage = Math.max(1, endPage - maxVisiblePages + 1);
+			}
+
+			// Add first page and ellipsis if needed
+			if (startPage > 1) {
+				appendPageNumber(1, currentPage === 1);
+				if (startPage > 2) {
+					appendEllipsis();
+				}
+			}
+
+			// Add page numbers
+			for (let i = startPage; i <= endPage; i++) {
+				appendPageNumber(i, i === currentPage);
+			}
+
+			// Add ellipsis and last page if needed
+			if (endPage < totalPages) {
+				if (endPage < totalPages - 1) {
+					appendEllipsis();
+				}
+				appendPageNumber(totalPages, currentPage === totalPages);
+			}
+
+			// Add next button
+			if (totalPages > 1) {
+				const nextButton = document.createElement('a');
+				nextButton.classList.add('page-number');
+				nextButton.innerHTML = '&raquo;';
+				nextButton.href = currentPage < totalPages ?
+					createPageUrl(currentPage + 1) : 'javascript:void(0)';
+				if (currentPage === totalPages) {
+					nextButton.style.opacity = '0.5';
+					nextButton.style.pointerEvents = 'none';
+				}
+				paginationContainer.appendChild(nextButton);
+			}
+
+			/**
+			 * Helper function to append a page number button
+			 */
+			function appendPageNumber(pageNum, isActive) {
+				const pageLink = document.createElement(isActive ? 'span' : 'a');
+				pageLink.classList.add('page-number');
+				if (isActive) {
+					pageLink.classList.add('active');
+				} else {
+					pageLink.href = createPageUrl(pageNum);
+				}
+				pageLink.textContent = pageNum;
+				paginationContainer.appendChild(pageLink);
+			}
+
+			/**
+			 * Helper function to append ellipsis
+			 */
+			function appendEllipsis() {
+				const ellipsis = document.createElement('span');
+				ellipsis.classList.add('page-ellipsis');
+				ellipsis.textContent = '...';
+				ellipsis.style.margin = '0 5px';
+				paginationContainer.appendChild(ellipsis);
+			}
+		}
+
+		/**
+		 * Creates URL for pagination
+		 */
+		function createPageUrl(pageNum) {
+			// Get current URL and params
+			const url = new URL(window.location.href);
+
+			// Get existing query parameters
+			const searchParams = url.searchParams;
+
+			// Update or add page parameter
+			searchParams.set('page', pageNum);
+
+			// Return the new URL string
+			return url.toString();
+		}
+
+		/**
+		 * Updates the result count display
+		 */
+		function updateResultCount() {
+			const rows = document.getElementById("graduatesTableBody").getElementsByTagName("tr");
+			let visibleCount = 0;
+
+			for (let i = 0; i < rows.length; i++) {
+				if (rows[i].style.display !== "none") {
+					visibleCount++;
+				}
+			}
+
+			document.getElementById("resultCount").innerText = "Nəticə: " + visibleCount;
+		}
+			const graduatesData = @Html.Raw(Json.Serialize(Model));
+			
 
 
+	</script>
 
 
-</script>
 </body>
+
 </html>

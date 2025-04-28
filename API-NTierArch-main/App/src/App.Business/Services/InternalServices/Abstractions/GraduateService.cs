@@ -5,26 +5,41 @@ using App.Business.Services.ExternalServices.Abstractions;
 using App.Business.Services.ExternalServices.Interfaces;
 using App.Business.Services.InternalServices.Interfaces;
 using App.Core.Entities;
+using App.Core.Entities.Identity;
+using App.DAL.Presistence;
 using App.DAL.Repositories.Interfaces;
+using App.Shared.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using QRCoder;
 
 namespace App.Business.Services
 {
     public class GraduateService : IGraduateService
     {
-        private readonly IGraduateRepository _repository;
-        private readonly IMapper _mapper;
-        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IFileManagerService _fileManagerService;
-
-        public GraduateService(IGraduateRepository repository, IMapper mapper, IWebHostEnvironment webHostEnvironment, IFileManagerService fileManagerService)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IGraduateRepository _repository;
+        private readonly IClaimService _claimService; 
+        private readonly ILogsService _logsService;
+        private readonly AppDbContext _dbContext;
+        private readonly IMapper _mapper;
+        
+        public GraduateService(IGraduateRepository repository, IMapper mapper, IWebHostEnvironment webHostEnvironment, IFileManagerService fileManagerService, ILogsService logsService, IClaimService claimService, AppDbContext dbContext)
         {
             _repository = repository;
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
             _fileManagerService = fileManagerService;
+            _logsService = logsService;
+            _claimService = claimService;
+             _dbContext = dbContext;
+        }
+        private async Task<User> GetCurrentUserAsync()
+        {
+            var userId = _claimService.GetUserId();
+            return await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
         }
 
         public async Task<IEnumerable<GraduateDTO>> GetAllAsync()
@@ -40,33 +55,42 @@ namespace App.Business.Services
             return _mapper.Map<GraduateDTO>(entity);
         }
 
-            public async Task<GraduateDTO> CreateAsync(CreateGraduateDTO createDTO)
+        public async Task<GraduateDTO> CreateAsync(CreateGraduateDTO createDTO)
+        {
+            var entity = _mapper.Map<Graduate>(createDTO);
+
+            if (createDTO.Photo != null)
             {
-                var entity = _mapper.Map<Graduate>(createDTO);
-
-                if (createDTO.Photo != null)
-                {
-                    entity.PhotoUrl = await _fileManagerService.UploadLocalAsync(createDTO.Photo, "Photos", _webHostEnvironment.WebRootPath);
-                }
-
-                if (createDTO.ImageId != null)
-                {
-                    entity.IdUrl = await _fileManagerService.UploadLocalAsync(createDTO.ImageId, "Ids", _webHostEnvironment.WebRootPath);
-                }
-
-
-                var createdEntity = await _repository.AddAsync(entity);
-
-                 string detailPageUrl = $"http://digiteam.az/home/details/{createdEntity.Id}";
-                string qrCodeFilePath = GenerateQRCode(detailPageUrl, createdEntity.Id);
-                 entity.QrCodeUrl = qrCodeFilePath;
-                await _repository.UpdateAsync(createdEntity);
-                 MailService.SendQrCode(createDTO.Email, qrCodeFilePath,entity);
-
-                return _mapper.Map<GraduateDTO>(createdEntity);
+                entity.PhotoUrl = await _fileManagerService.UploadLocalAsync(createDTO.Photo, "Photos", _webHostEnvironment.WebRootPath);
             }
 
-            private string GenerateQRCode(string qrData, int graduateId)
+            if (createDTO.ImageId != null)
+            {
+                entity.IdUrl = await _fileManagerService.UploadLocalAsync(createDTO.ImageId, "Ids", _webHostEnvironment.WebRootPath);
+            }
+
+            var createdEntity = await _repository.AddAsync(entity);
+
+            string detailPageUrl = $"http://digiteam.az/home/details/{createdEntity.Id}";
+            string qrCodeFilePath = GenerateQRCode(detailPageUrl, createdEntity.Id);
+            createdEntity.QrCodeUrl = qrCodeFilePath;
+            await _repository.UpdateAsync(createdEntity);
+
+            MailService.SendQrCode(createDTO.Email, qrCodeFilePath, entity);
+            var User = await GetCurrentUserAsync();
+
+            await _logsService.CreateAsync(new CreateLogsDTO
+            {
+                Message = $"{entity.Name + " " + entity.Surname + " "+entity.FatherName+ " "  } yaradıldı. {User.UserName} tərəfindən.",
+                Username = User.UserName,
+                UserId = User.Id,
+            });
+
+            return _mapper.Map<GraduateDTO>(createdEntity);
+        }
+
+
+        private string GenerateQRCode(string qrData, int graduateId)
             {
                 using (var qrGenerator = new QRCodeGenerator())
                 {
@@ -120,8 +144,19 @@ namespace App.Business.Services
             if (entity != null)
             {
                 await _repository.DeleteAsync(entity);
+                var User = await GetCurrentUserAsync();
+
+                await _logsService.CreateAsync(new CreateLogsDTO
+                {
+                    Username=User.UserName,
+                    Message = $"{entity.Name + " " + entity.Surname + " " + entity.FatherName + " "} silindi. {User.UserName} tərəfindən.",
+                    UserId = User.Id,
+
+                });
             }
+
             return _mapper.Map<GraduateDTO>(entity);
         }
+
     }
 }

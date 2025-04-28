@@ -28,27 +28,7 @@ namespace App.Business
         {
             services.AddServices();
             services.RegisterAutoMapper(); 
-            services.Configure<IpRateLimitOptions>(options =>
-            {
-                options.GeneralRules = new List<RateLimitRule>
-                {
-                    new RateLimitRule
-                    {
-                        Endpoint = "*",
-                        Limit = 100, 
-                        Period = "10s" 
-                    }
-                };
-            });
-            services.AddInMemoryRateLimiting();
-            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
-            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
-            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
-            services.AddInMemoryRateLimiting();
-            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
-            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
-            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
-
+ 
             services.AddControllers(options =>
             {
                 options.Conventions.Add(new PluralizedRouteConvention());
@@ -71,6 +51,7 @@ namespace App.Business
             {
                 { typeof(IGraduateService), typeof(GraduateService) },
                 { typeof(IAccountService), typeof(AccountService) },
+                { typeof(ILogsService), typeof(LogsService) },
 
             };
 

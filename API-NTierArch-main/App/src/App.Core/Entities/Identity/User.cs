@@ -11,6 +11,7 @@ namespace App.Core.Entities.Identity
 {
     public class User : IdentityUser
     {
+        public List<Logs>? Logs { get; set; }
         public EUserRole EUserRole { get; set; }
     }
 }

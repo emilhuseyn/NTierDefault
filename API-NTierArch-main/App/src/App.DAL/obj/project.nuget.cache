@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "GtKU+ekWqVA=",
+  "dgSpecHash": "KjmW3ty4dBU=",
   "success": true,
   "projectFilePath": "C:\\Users\\emil.huseynov.zabil\\source\\repos\\QRMezuniyyet\\API-NTierArch-main\\App\\src\\App.DAL\\App.DAL.csproj",
   "expectedPackageFiles": [
@@ -69,11 +69,11 @@
     "C:\\Users\\emil.huseynov.zabil\\.nuget\\packages\\system.codedom\\4.4.0\\system.codedom.4.4.0.nupkg.sha512",
     "C:\\Users\\emil.huseynov.zabil\\.nuget\\packages\\system.collections.immutable\\6.0.0\\system.collections.immutable.6.0.0.nupkg.sha512",
     "C:\\Users\\emil.huseynov.zabil\\.nuget\\packages\\system.composition\\6.0.0\\system.composition.6.0.0.nupkg.sha512",
-    "C:\\Users\\emil.huseynov.zabil\\.nuget\\packages\\system.composition.attributedmodel\\6.0.0\\system.composition.attributedmodel.6.0.0.nupkg.sha512",
+    "C:\\Users\\emil.huseynov.zabil\\.nuget\\packages\\system.composition.attributedmodel\\8.0.0\\system.composition.attributedmodel.8.0.0.nupkg.sha512",
     "C:\\Users\\emil.huseynov.zabil\\.nuget\\packages\\system.composition.convention\\6.0.0\\system.composition.convention.6.0.0.nupkg.sha512",
-    "C:\\Users\\emil.huseynov.zabil\\.nuget\\packages\\system.composition.hosting\\6.0.0\\system.composition.hosting.6.0.0.nupkg.sha512",
-    "C:\\Users\\emil.huseynov.zabil\\.nuget\\packages\\system.composition.runtime\\6.0.0\\system.composition.runtime.6.0.0.nupkg.sha512",
-    "C:\\Users\\emil.huseynov.zabil\\.nuget\\packages\\system.composition.typedparts\\6.0.0\\system.composition.typedparts.6.0.0.nupkg.sha512",
+    "C:\\Users\\emil.huseynov.zabil\\.nuget\\packages\\system.composition.hosting\\8.0.0\\system.composition.hosting.8.0.0.nupkg.sha512",
+    "C:\\Users\\emil.huseynov.zabil\\.nuget\\packages\\system.composition.runtime\\8.0.0\\system.composition.runtime.8.0.0.nupkg.sha512",
+    "C:\\Users\\emil.huseynov.zabil\\.nuget\\packages\\system.composition.typedparts\\8.0.0\\system.composition.typedparts.8.0.0.nupkg.sha512",
     "C:\\Users\\emil.huseynov.zabil\\.nuget\\packages\\system.configuration.configurationmanager\\8.0.0\\system.configuration.configurationmanager.8.0.0.nupkg.sha512",
     "C:\\Users\\emil.huseynov.zabil\\.nuget\\packages\\system.diagnostics.diagnosticsource\\8.0.1\\system.diagnostics.diagnosticsource.8.0.1.nupkg.sha512",
     "C:\\Users\\emil.huseynov.zabil\\.nuget\\packages\\system.diagnostics.eventlog\\8.0.0\\system.diagnostics.eventlog.8.0.0.nupkg.sha512",

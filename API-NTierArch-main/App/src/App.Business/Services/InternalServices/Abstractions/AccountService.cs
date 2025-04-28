@@ -77,8 +77,8 @@ namespace App.Business.Services.InternalServices.Abstractions
         {
             var user = await _userManager.FindByNameAsync(username);
             if (user == null) return SignInResult.Failed;
-
-            return await _signInManager.PasswordSignInAsync(user, password, true, false);
+            var result = await _signInManager.PasswordSignInAsync(user, password, true, false);
+            return result;
         }
         public async Task EnsureRolesCreatedAsync()
         {
